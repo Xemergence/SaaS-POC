@@ -36,7 +36,11 @@ export default function Login() {
           to="/"
           className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
         >
-          <img src="/vite.svg" alt="xEmergence Logo" className="h-8 w-8" />
+          <img
+            src="/logo-black.png"
+            alt="xEmergence Logo"
+            className="h-8 w-8 rounded-full object-cover"
+          />
           <span className="text-xl font-bold text-white">xEmergence</span>
         </Link>
       </div>

@@ -1,23 +1,47 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Twitter, Youtube, Instagram } from "lucide-react";
+import {
+  ArrowRight,
+  Twitter,
+  Youtube,
+  Instagram,
+  Target,
+  Clock,
+  Brain,
+  Users,
+  FileText,
+  TrendingUp,
+  Bot,
+  Zap,
+  MessageSquare,
+  Image,
+  Code,
+  Database,
+  Cpu,
+  ShoppingCart,
+  Package,
+} from "lucide-react";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Header */}
       <header className="container mx-auto py-6 px-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img src="/vite.svg" alt="xEmergence Logo" className="h-10 w-10" />
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src="/logo-black.png"
+            alt="xEmergence Logo"
+            className="h-10 w-10 rounded-full object-cover"
+          />
           <span className="text-xl font-bold text-white">xEmergence</span>
-        </div>
+        </Link>
         <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#"
+          <Link
+            to="/products"
             className="text-white hover:text-[#7b68ee] transition-colors"
           >
-            Product
-          </a>
+            Products
+          </Link>
           <a
             href="#"
             className="text-white hover:text-[#7b68ee] transition-colors"
@@ -36,6 +60,13 @@ export default function LandingPage() {
           >
             Contact Us
           </a>
+          <div className="h-6 w-px bg-[#2a2a3a]"></div>
+          <Link
+            to="/products"
+            className="text-white hover:text-[#7b68ee] transition-colors font-medium"
+          >
+            3D Products Sale
+          </Link>
         </div>
         <div className="flex items-center gap-4">
           <Link to="/login">
@@ -86,11 +117,11 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="lg:w-1/2 flex justify-center">
-          <div className="relative">
+          <div className="relative bg-[#2a2a3a] p-4 rounded-lg">
             <img
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+              src="/dashboard-example.png"
               alt="xEmergence Dashboard Preview"
-              className="relative rounded-lg shadow-2xl border border-[#2a2a3a] w-full max-w-lg"
+              className="relative rounded-lg shadow-2xl border border-[#3a3a4a] w-full max-w-lg"
             />
           </div>
         </div>
@@ -164,32 +195,32 @@ export default function LandingPage() {
             <FeatureCard
               title="Get Focused"
               description="A place for new issues and ideas. Concentrate on the essentials and disregard diversions."
-              icon={<GlowingIcon color="#9aff76" />}
+              icon={<Target className="h-12 w-12 text-[#9aff76]" />}
             />
             <FeatureCard
               title="Save time"
               description="Define and organize larger pieces of work with our comprehensive dashboard tools."
-              icon={<GlowingIcon color="#ff7676" />}
+              icon={<Clock className="h-12 w-12 text-[#ff7676]" />}
             />
             <FeatureCard
               title="Gen AI to Co-Create"
               description="Keep work in motion. No longer heavy files with our AI-powered analytics and insights."
-              icon={<GlowingIcon color="#a876ff" />}
+              icon={<Brain className="h-12 w-12 text-[#a876ff]" />}
             />
             <FeatureCard
               title="Acquire and Monitor your Users"
               description="Track website traffic, revenue metrics, operating costs, and database usage with real-time updates."
-              icon={<GlowingIcon color="#76ffb8" />}
+              icon={<Users className="h-12 w-12 text-[#76ffb8]" />}
             />
             <FeatureCard
               title="Single Source Documentation"
               description="All your business metrics and documentation in one place for easy access and management."
-              icon={<GlowingIcon color="#c576ff" />}
+              icon={<FileText className="h-12 w-12 text-[#c576ff]" />}
             />
             <FeatureCard
               title="Get Ahead!"
               description="Stay ahead of the competition with our cutting-edge tools and real-time analytics."
-              icon={<GlowingIcon color="#76e4ff" />}
+              icon={<TrendingUp className="h-12 w-12 text-[#76e4ff]" />}
             />
           </div>
         </div>
@@ -202,12 +233,12 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jether"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Sam</h3>
+                  <h3 className="font-bold text-white">Jether</h3>
                   <p className="text-sm text-gray-300">
                     AI integration specialist
                   </p>
@@ -215,12 +246,12 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Johana"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Emma</h3>
+                  <h3 className="font-bold text-white">Johana</h3>
                   <p className="text-sm text-gray-300">
                     Expands her reach through analytics
                   </p>
@@ -228,12 +259,12 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyler"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Vissepo"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Tyler</h3>
+                  <h3 className="font-bold text-white">Vissepo</h3>
                   <p className="text-sm text-gray-300">
                     Intelligent systems specialist
                   </p>
@@ -293,15 +324,112 @@ export default function LandingPage() {
               shifts across your work processes
             </p>
             <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-                <div
-                  key={i}
-                  className="bg-[#1e1e2d] p-4 rounded-lg flex items-center justify-center"
-                >
-                  <GlowingIcon color={getRandomColor()} size="sm" />
-                </div>
-              ))}
+              <AIToolCard
+                icon={<Bot className="h-8 w-8 text-[#7b68ee]" />}
+                name="ChatGPT"
+              />
+              <AIToolCard
+                icon={<Brain className="h-8 w-8 text-[#9aff76]" />}
+                name="Claude"
+              />
+              <AIToolCard
+                icon={<Zap className="h-8 w-8 text-[#ff7676]" />}
+                name="Gemini"
+              />
+              <AIToolCard
+                icon={<MessageSquare className="h-8 w-8 text-[#76ffb8]" />}
+                name="Perplexity"
+              />
+              <AIToolCard
+                icon={<Image className="h-8 w-8 text-[#a876ff]" />}
+                name="DALL-E"
+              />
+              <AIToolCard
+                icon={<Code className="h-8 w-8 text-[#76e4ff]" />}
+                name="GitHub Copilot"
+              />
+              <AIToolCard
+                icon={<Database className="h-8 w-8 text-[#ffb876]" />}
+                name="Supabase"
+              />
+              <AIToolCard
+                icon={<Cpu className="h-8 w-8 text-[#c576ff]" />}
+                name="OpenAI"
+              />
+              <AIToolCard
+                icon={<Brain className="h-8 w-8 text-[#9aff76]" />}
+                name="Anthropic"
+              />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Platforms Selector Section */}
+      <section className="py-20 bg-[#1a1a24]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
+              AI PLATFORMS
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+              Choose Your AI Platform
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Select from our supported AI platforms to enhance your business
+              operations
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-4 justify-center mb-12">
+            {aiPlatforms.map((platform) => {
+              const IconComponent = platform.icon;
+              return (
+                <button
+                  key={platform.id}
+                  className="flex items-center gap-3 px-6 py-4 rounded-full bg-[#1e1e2d] text-gray-300 hover:bg-[#2a2a3a] hover:text-white hover:border-[#7b68ee] border border-[#2a2a3a] transition-all"
+                >
+                  <IconComponent className="h-5 w-5" />
+                  <span className="font-medium">{platform.name}</span>
+                  <span className="text-xs bg-[#2a2a3a] px-2 py-1 rounded-full">
+                    {platform.category}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Products Navigation Section */}
+      <section className="py-20 bg-[#121218]">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
+            EXPLORE OUR PRODUCTS
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+            Ready to Transform Your Business?
+          </h2>
+          <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+            Discover our range of innovative products designed to enhance your
+            business operations, from 3D printed solutions to IoT devices and
+            NFC technology.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link to="/products">
+              <Button className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white px-8 py-6 text-lg rounded-full flex items-center gap-3">
+                <ShoppingCart className="h-5 w-5" />
+                Browse Products
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Link
+              to="/products"
+              className="text-[#7b68ee] hover:text-white transition-colors flex items-center gap-2"
+            >
+              <Package className="h-4 w-4" />
+              View All Categories
+            </Link>
           </div>
         </div>
       </section>
@@ -354,14 +482,14 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
+              <Link to="/" className="flex items-center gap-2 mb-4">
                 <img
-                  src="/logo.png"
+                  src="/logo-black.png"
                   alt="xEmergence Logo"
                   className="h-8 w-8"
                 />
                 <span className="text-xl font-bold text-white">xEmergence</span>
-              </div>
+              </Link>
               <p className="text-gray-300 mb-4">
                 Unleash the Full Potential of Your Ideas with Our Accelerated
                 Solutions, Driving Your Success Forward
@@ -623,6 +751,32 @@ function GlowingIcon({
     </div>
   );
 }
+
+function AIToolCard({ icon, name }: { icon: React.ReactNode; name: string }) {
+  return (
+    <div className="bg-[#1e1e2d] p-4 rounded-lg flex flex-col items-center justify-center gap-2 hover:bg-[#2a2a3a] transition-colors">
+      {icon}
+      <span className="text-xs text-gray-300 font-medium">{name}</span>
+    </div>
+  );
+}
+
+const aiPlatforms = [
+  { id: "chatgpt", name: "ChatGPT", category: "LLM", icon: Bot },
+  { id: "claude", name: "Claude", category: "LLM", icon: Brain },
+  { id: "gemini", name: "Gemini", category: "LLM", icon: Zap },
+  { id: "dalle", name: "DALL-E", category: "Image", icon: Image },
+  { id: "midjourney", name: "Midjourney", category: "Image", icon: Image },
+  { id: "copilot", name: "GitHub Copilot", category: "Code", icon: Code },
+  { id: "openai", name: "OpenAI API", category: "API", icon: Cpu },
+  { id: "anthropic", name: "Anthropic", category: "API", icon: Brain },
+  {
+    id: "perplexity",
+    name: "Perplexity",
+    category: "Search",
+    icon: MessageSquare,
+  },
+];
 
 function getRandomColor() {
   const colors = [

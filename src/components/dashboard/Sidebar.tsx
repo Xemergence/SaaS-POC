@@ -94,10 +94,14 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 border-r border-[#2a2a3a] bg-[#1e1e2d] flex flex-col h-full">
-      <div className="p-6 flex items-center gap-2">
-        <img src="/vite.svg" alt="xEmergence Logo" className="h-8 w-8" />
+      <Link to="/" className="p-6 flex items-center gap-2">
+        <img
+          src="/logo-black.png"
+          alt="xEmergence Logo"
+          className="h-8 w-8 rounded-full object-cover"
+        />
         <h1 className="text-xl font-bold text-white">xEmergence</h1>
-      </div>
+      </Link>
       <nav className="flex-1 px-3 py-2 space-y-1">
         {navItems.map((item) => (
           <NavItem

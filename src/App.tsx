@@ -6,6 +6,7 @@ import routes from "tempo-routes";
 const LandingPage = lazy(() => import("./components/landing/LandingPage"));
 const Login = lazy(() => import("./components/auth/Login"));
 const SignUp = lazy(() => import("./components/auth/SignUp"));
+const Products = lazy(() => import("./components/Products"));
 const DashboardLayout = lazy(
   () => import("./components/dashboard/DashboardLayout"),
 );
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="financial" element={<Financial />} />
