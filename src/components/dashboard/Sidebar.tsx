@@ -13,6 +13,7 @@ import {
   Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { memo, useMemo } from "react";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -21,9 +22,15 @@ interface NavItemProps {
   active?: boolean;
 }
 
-function NavItem({ icon, label, href, active }: NavItemProps) {
+// Memoize NavItem to prevent unnecessary re-renders
+const NavItem = memo(function NavItem({
+  icon,
+  label,
+  href,
+  active,
+}: NavItemProps) {
   return (
-    <Link to={href}>
+    <Link to={href} prefetch="intent">
       <Button
         variant="ghost"
         className={cn(
@@ -38,67 +45,81 @@ function NavItem({ icon, label, href, active }: NavItemProps) {
       </Button>
     </Link>
   );
-}
+});
 
-export default function Sidebar() {
+// Define nav items outside component to prevent recreation on each render
+const createNavItems = () => [
+  {
+    icon: <LayoutDashboard size={20} />,
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+  {
+    icon: <BarChart3 size={20} />,
+    label: "Financial",
+    href: "/dashboard/financial",
+  },
+  {
+    icon: <Calendar size={20} />,
+    label: "Calendar",
+    href: "/dashboard/calendar",
+  },
+  {
+    icon: <CircuitBoard size={20} />,
+    label: "Sensors",
+    href: "/dashboard/sensors",
+  },
+  {
+    icon: <Share2 size={20} />,
+    label: "Social Media",
+    href: "/dashboard/social-media",
+  },
+  {
+    icon: <BrainCircuit size={20} />,
+    label: "AI Overview",
+    href: "/dashboard/ai-overview",
+  },
+  {
+    icon: <AppWindow size={20} />,
+    label: "AI Apps",
+    href: "/dashboard/ai-apps",
+  },
+  {
+    icon: <MessageSquareText size={20} />,
+    label: "AI Chat",
+    href: "/dashboard/ai-chat",
+  },
+  {
+    icon: <Settings size={20} />,
+    label: "Settings",
+    href: "/dashboard/settings",
+  },
+];
+
+function Sidebar() {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const navItems = [
-    {
-      icon: <LayoutDashboard size={20} />,
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      icon: <BarChart3 size={20} />,
-      label: "Financial",
-      href: "/dashboard/financial",
-    },
-    {
-      icon: <Calendar size={20} />,
-      label: "Calendar",
-      href: "/dashboard/calendar",
-    },
-    {
-      icon: <BrainCircuit size={20} />,
-      label: "AI Overview",
-      href: "/dashboard/ai-overview",
-    },
-    {
-      icon: <AppWindow size={20} />,
-      label: "AI Apps",
-      href: "/dashboard/ai-apps",
-    },
-    {
-      icon: <MessageSquareText size={20} />,
-      label: "AI Chat",
-      href: "/dashboard/ai-chat",
-    },
-    {
-      icon: <CircuitBoard size={20} />,
-      label: "Sensors",
-      href: "/dashboard/sensors",
-    },
-    {
-      icon: <Share2 size={20} />,
-      label: "Social Media",
-      href: "/dashboard/social-media",
-    },
-    {
-      icon: <Settings size={20} />,
-      label: "Settings",
-      href: "/dashboard/settings",
-    },
-  ];
+  // Memoize nav items to prevent recreation on each render
+  const navItems = useMemo(() => createNavItems(), []);
 
   return (
     <aside className="w-64 border-r border-[#2a2a3a] bg-[#1e1e2d] flex flex-col h-full">
-      <div className="p-6 flex items-center gap-2">
-        <img src="/vite.svg" alt="xEmergence Logo" className="h-8 w-8" />
+      <Link
+        to="/"
+        className="p-6 flex items-center gap-2 hover:opacity-80 transition-opacity"
+      >
+        <img
+          src="/vite.svg"
+          alt="xEmergence Logo"
+          className="h-8 w-8"
+          width="32"
+          height="32"
+          loading="eager"
+        />
         <h1 className="text-xl font-bold text-white">xEmergence</h1>
-      </div>
-      <nav className="flex-1 px-3 py-2 space-y-1">
+      </Link>
+      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
           <NavItem
             key={item.href}
@@ -125,3 +146,6 @@ export default function Sidebar() {
     </aside>
   );
 }
+
+// Export memoized component to prevent unnecessary re-renders
+export default memo(Sidebar);

@@ -1,9 +1,20 @@
-import { Suspense, lazy } from "react";
-import { useRoutes, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy, startTransition, useState, useEffect } from "react";
+import { useRoutes, Routes, Route } from "react-router-dom";
 import routes from "tempo-routes";
 
-// Lazy load components
+// Loading component with minimal footprint
+const LoadingFallback = () => (
+  <div className="flex h-screen w-screen items-center justify-center bg-[#1e1e2d] text-white">
+    <div className="flex flex-col items-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
+      <span className="mt-2">Loading...</span>
+    </div>
+  </div>
+);
+
+// Lazy load components with prefetching hints
 const LandingPage = lazy(() => import("./components/landing/LandingPage"));
+const Products = lazy(() => import("./components/products/Products"));
 const Login = lazy(() => import("./components/auth/Login"));
 const SignUp = lazy(() => import("./components/auth/SignUp"));
 const DashboardLayout = lazy(
@@ -19,37 +30,50 @@ const Sensors = lazy(() => import("./components/dashboard/Sensors"));
 const SocialMedia = lazy(() => import("./components/dashboard/SocialMedia"));
 const Settings = lazy(() => import("./components/dashboard/Settings"));
 
+// Prefetch dashboard components after initial load
+const prefetchDashboardComponents = () => {
+  const components = [
+    import("./components/dashboard/Dashboard"),
+    import("./components/dashboard/DashboardLayout"),
+  ];
+  return Promise.all(components);
+};
+
 function App() {
+  const [isPrefetching, setIsPrefetching] = useState(false);
+
+  // Prefetch critical components after initial render
+  useEffect(() => {
+    if (!isPrefetching) {
+      setIsPrefetching(true);
+      // Use startTransition to avoid blocking the main thread
+      startTransition(() => {
+        prefetchDashboardComponents().catch(console.error);
+      });
+    }
+  }, [isPrefetching]);
+
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-screen w-screen items-center justify-center">
-          Loading...
-        </div>
-      }
-    >
-      <>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="financial" element={<Financial />} />
-            <Route path="calendar" element={<CalendarView />} />
-            <Route path="ai-overview" element={<AIOverview />} />
-            <Route path="ai-apps" element={<AIApps />} />
-            <Route path="ai-chat" element={<AIChat />} />
-            <Route path="sensors" element={<Sensors />} />
-            <Route path="social-media" element={<SocialMedia />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-          {import.meta.env.VITE_TEMPO === "true" && (
-            <Route path="/tempobook/*" />
-          )}
-        </Routes>
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-      </>
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="financial" element={<Financial />} />
+          <Route path="calendar" element={<CalendarView />} />
+          <Route path="ai-overview" element={<AIOverview />} />
+          <Route path="ai-apps" element={<AIApps />} />
+          <Route path="ai-chat" element={<AIChat />} />
+          <Route path="sensors" element={<Sensors />} />
+          <Route path="social-media" element={<SocialMedia />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        {import.meta.env.VITE_TEMPO === "true" && <Route path="/tempobook/*" />}
+      </Routes>
+      {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
     </Suspense>
   );
 }

@@ -1,60 +1,138 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Twitter, Youtube, Instagram } from "lucide-react";
+import {
+  ArrowRight,
+  Twitter,
+  Youtube,
+  Instagram,
+  Loader2,
+  Target,
+  Clock,
+  Bot,
+  Users,
+  FileText,
+  TrendingUp,
+  ShoppingBag,
+  Package,
+  Smartphone,
+  Home,
+  Factory,
+  Calendar,
+  MessageSquare,
+  BarChart3,
+  Bell,
+  Settings,
+  Shield,
+  Zap,
+  Database,
+  GraduationCap,
+  Briefcase,
+  Baby,
+} from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function LandingPage() {
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handlePlanSelection = async (planType: string, priceId: string) => {
+    setLoadingPlan(planType);
+
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "supabase-functions-stripe-checkout",
+        {
+          body: {
+            priceId: priceId,
+            quantity: 1,
+            successUrl: `${window.location.origin}/dashboard?payment=success`,
+            cancelUrl: `${window.location.origin}/?payment=cancelled`,
+          },
+        },
+      );
+
+      if (error) {
+        console.error("Error creating checkout session:", error);
+        alert("Failed to initiate payment. Please try again.");
+        return;
+      }
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Failed to get checkout URL. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#121218] text-white">
       {/* Header */}
-      <header className="container mx-auto py-6 px-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img src="/vite.svg" alt="xEmergence Logo" className="h-10 w-10" />
-          <span className="text-xl font-bold text-white">xEmergence</span>
-        </div>
-        <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#"
-            className="text-white hover:text-[#7b68ee] transition-colors"
+      <header className="bg-[#1a1a24] border-b border-[#2a2a3a]">
+        <div className="container mx-auto py-6 px-4 flex items-center justify-between">
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            Product
-          </a>
-          <a
-            href="#"
-            className="text-white hover:text-[#7b68ee] transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="#"
-            className="text-white hover:text-[#7b68ee] transition-colors"
-          >
-            Company
-          </a>
-          <a
-            href="#"
-            className="text-white hover:text-[#7b68ee] transition-colors"
-          >
-            Contact Us
-          </a>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link to="/login">
-            <Button
-              variant="ghost"
-              className="text-white hover:text-white hover:bg-[#1e1e2d]"
+            <img src="/vite.svg" alt="xEmergence Logo" className="h-10 w-10" />
+            <span className="text-xl font-bold text-white">xEmergence</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-8">
+            <a
+              href="#product"
+              className="text-white hover:text-[#7b68ee] transition-colors"
             >
-              Sign In
-            </Button>
-          </Link>
-          <Link to="/signup">
-            <Button className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white rounded-full">
-              <span>Sign Up</span>
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+              Product
+            </a>
+            <a
+              href="#pricing"
+              className="text-white hover:text-[#7b68ee] transition-colors"
+            >
+              Pricing
+            </a>
+            <a
+              href="#company"
+              className="text-white hover:text-[#7b68ee] transition-colors"
+            >
+              Company
+            </a>
+            <a
+              href="#contact"
+              className="text-white hover:text-[#7b68ee] transition-colors"
+            >
+              Contact Us
+            </a>
+            <div className="h-6 w-px bg-[#2a2a3a]"></div>
+            <a
+              href="#products"
+              className="text-white hover:text-[#7b68ee] transition-colors font-medium"
+            >
+              Products
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link to="/login">
+              <Button
+                variant="ghost"
+                className="text-white hover:text-white hover:bg-[#1e1e2d]"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white rounded-full">
+                <span>Sign Up</span>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
-
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 flex flex-col lg:flex-row items-center gap-12">
         <div className="lg:w-1/2 space-y-6">
@@ -88,16 +166,15 @@ export default function LandingPage() {
         <div className="lg:w-1/2 flex justify-center">
           <div className="relative">
             <img
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+              src="/dashboard-example.png"
               alt="xEmergence Dashboard Preview"
-              className="relative rounded-lg shadow-2xl border border-[#2a2a3a] w-full max-w-lg"
+              className="relative rounded-lg shadow-2xl border border-[#2a2a3a] w-full max-w-2xl"
             />
           </div>
         </div>
       </section>
-
       {/* Pricing Section */}
-      <section className="py-20 bg-[#1a1a24]">
+      <section id="pricing" className="py-20 bg-[#1a1a24]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
@@ -120,6 +197,8 @@ export default function LandingPage() {
                 "Unlimited members",
               ]}
               ctaText="Get started with MAX"
+              onSelect={() => handlePlanSelection("MAX", "price_max_plan_id")}
+              isLoading={loadingPlan === "MAX"}
             />
             <PricingCard
               tier="PLUS"
@@ -133,6 +212,8 @@ export default function LandingPage() {
                 "2-4 members",
               ]}
               ctaText="Get started with Plus"
+              onSelect={() => handlePlanSelection("PLUS", "price_plus_plan_id")}
+              isLoading={loadingPlan === "PLUS"}
             />
             <PricingCard
               tier="FREE"
@@ -146,13 +227,15 @@ export default function LandingPage() {
                 "1 member",
               ]}
               ctaText="Get started with FREE"
+              onSelect={() => (window.location.href = "/signup")}
+              isLoading={false}
+              isFree={true}
             />
           </div>
         </div>
       </section>
-
       {/* Features Section */}
-      <section className="py-20 bg-[#121218]">
+      <section id="product" className="py-20 bg-[#121218]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
@@ -164,50 +247,52 @@ export default function LandingPage() {
             <FeatureCard
               title="Get Focused"
               description="A place for new issues and ideas. Concentrate on the essentials and disregard diversions."
-              icon={<GlowingIcon color="#9aff76" />}
+              icon={<FeatureIcon icon={Target} color="#9aff76" />}
             />
             <FeatureCard
               title="Save time"
               description="Define and organize larger pieces of work with our comprehensive dashboard tools."
-              icon={<GlowingIcon color="#ff7676" />}
+              icon={<FeatureIcon icon={Clock} color="#ff7676" />}
             />
             <FeatureCard
               title="Gen AI to Co-Create"
               description="Keep work in motion. No longer heavy files with our AI-powered analytics and insights."
-              icon={<GlowingIcon color="#a876ff" />}
+              icon={<FeatureIcon icon={Bot} color="#a876ff" />}
             />
             <FeatureCard
               title="Acquire and Monitor your Users"
               description="Track website traffic, revenue metrics, operating costs, and database usage with real-time updates."
-              icon={<GlowingIcon color="#76ffb8" />}
+              icon={<FeatureIcon icon={Users} color="#76ffb8" />}
             />
             <FeatureCard
               title="Single Source Documentation"
               description="All your business metrics and documentation in one place for easy access and management."
-              icon={<GlowingIcon color="#c576ff" />}
+              icon={<FeatureIcon icon={FileText} color="#c576ff" />}
             />
             <FeatureCard
               title="Get Ahead!"
               description="Stay ahead of the competition with our cutting-edge tools and real-time analytics."
-              icon={<GlowingIcon color="#76e4ff" />}
+              icon={<FeatureIcon icon={TrendingUp} color="#76e4ff" />}
             />
           </div>
         </div>
       </section>
-
       {/* Testimonials Section */}
-      <section className="py-20 bg-[#1a1a24]">
+      <section id="company" className="py-20 bg-[#1a1a24]">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8">
           <div className="bg-[#1e1e2d] p-8 rounded-lg">
             <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white mb-4">
+                Team members
+              </h3>
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jether"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Sam</h3>
+                  <h3 className="font-bold text-white">Jether</h3>
                   <p className="text-sm text-gray-300">
                     AI integration specialist
                   </p>
@@ -215,12 +300,12 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Vissepo"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Emma</h3>
+                  <h3 className="font-bold text-white">Vissepo</h3>
                   <p className="text-sm text-gray-300">
                     Expands her reach through analytics
                   </p>
@@ -228,12 +313,12 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-4">
                 <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tyler"
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Johan"
                   alt="User"
                   className="w-12 h-12 rounded-full bg-[#2a2a3a]"
                 />
                 <div>
-                  <h3 className="font-bold text-white">Tyler</h3>
+                  <h3 className="font-bold text-white">Johan</h3>
                   <p className="text-sm text-gray-300">
                     Intelligent systems specialist
                   </p>
@@ -249,13 +334,7 @@ export default function LandingPage() {
           </div>
           <div className="bg-[#1e1e2d] p-8 rounded-lg">
             <div className="flex flex-col h-full justify-between">
-              <div className="mb-6">
-                <img
-                  src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&q=80"
-                  alt="Workflow"
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-              </div>
+              <div className="mb-6"></div>
               <div>
                 <h3 className="text-xl font-bold text-white">
                   Enhance your Workflow with Sustainability at its Core
@@ -270,44 +349,193 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* AI Tools Section */}
       <section className="py-20 bg-[#121218]">
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
-          <div>
-            <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-[#7b68ee] opacity-20 blur-xl"></div>
-              <img
-                src="https://images.unsplash.com/photo-1581092921461-39b9d007dfb9?w=800&q=80"
-                alt="AI Tools"
-                className="relative rounded-lg w-full"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col justify-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              Your favourite AI tools
-            </h2>
-            <p className="text-gray-300 mb-8">
-              xEmergence operates with every tool you adore, enabling smooth
-              shifts across your work processes
-            </p>
-            <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-                <div
-                  key={i}
-                  className="bg-[#1e1e2d] p-4 rounded-lg flex items-center justify-center"
-                >
-                  <GlowingIcon color={getRandomColor()} size="sm" />
+        <div className="w-full px-4 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="lg:w-1/2 flex flex-col justify-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+                Your favourite AI tools
+              </h2>
+              <p className="text-gray-300 mb-8">
+                xEmergence operates with every tool you adore, enabling smooth
+                shifts across your work processes
+              </p>
+              <div className="mt-8">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">
+                      Centralized AI Control Tower
+                    </h3>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      Our platform serves as a unified control tower, powered by
+                      advanced AI in the backend, designed to enhance
+                      operational efficiency and provide comprehensive
+                      visualization. By centralizing all your tools and
+                      platforms under one intelligent system, we empower end
+                      users with seamless integration, real-time insights, and
+                      automated workflows that transform how businesses operate
+                      and make data-driven decisions.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                      Access a comprehensive suite of AI-powered tools designed
+                      to streamline your workflow, from intelligent scheduling
+                      and analytics to automated notifications and security
+                      management.
+                    </p>
+                  </div>
                 </div>
-              ))}
+              </div>
+            </div>
+            <div className="lg:w-1/2 w-full">
+              <div className="grid grid-cols-3 gap-4">
+                <AIServiceCard
+                  title="Scheduling"
+                  icon={<Calendar className="h-6 w-6" />}
+                  color="#9aff76"
+                />
+                <AIServiceCard
+                  title="AI Chat"
+                  icon={<MessageSquare className="h-6 w-6" />}
+                  color="#76e4ff"
+                />
+                <AIServiceCard
+                  title="Analytics"
+                  icon={<BarChart3 className="h-6 w-6" />}
+                  color="#a876ff"
+                />
+                <AIServiceCard
+                  title="AI Assistant"
+                  icon={<Bot className="h-6 w-6" />}
+                  color="#ff7676"
+                />
+                <AIServiceCard
+                  title="Notifications"
+                  icon={<Bell className="h-6 w-6" />}
+                  color="#ffb876"
+                />
+                <AIServiceCard
+                  title="Configuration"
+                  icon={<Settings className="h-6 w-6" />}
+                  color="#c576ff"
+                />
+                <AIServiceCard
+                  title="Security"
+                  icon={<Shield className="h-6 w-6" />}
+                  color="#76ffb8"
+                />
+                <AIServiceCard
+                  title="Automation"
+                  icon={<Zap className="h-6 w-6" />}
+                  color="#7b68ee"
+                />
+                <AIServiceCard
+                  title="Data Management"
+                  icon={<Database className="h-6 w-6" />}
+                  color="#ff76c5"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
+      {/* Platform Integrations Section */}
+      <section className="py-12 bg-[#121218]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-semibold text-white mb-2">
+              Platform Integrations
+            </h3>
+            <p className="text-gray-300">
+              Seamlessly connect with industry-specific platforms
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <PlatformSelector
+              title="Education"
+              icon={<GraduationCap className="h-6 w-6" />}
+              color="#9aff76"
+            />
+            <PlatformSelector
+              title="Real Estate"
+              icon={<Home className="h-6 w-6" />}
+              color="#a876ff"
+            />
+            <PlatformSelector
+              title="Services"
+              icon={<Briefcase className="h-6 w-6" />}
+              color="#76e4ff"
+            />
+            <PlatformSelector
+              title="Pregnancy Platform"
+              icon={<Baby className="h-6 w-6" />}
+              color="#ff7676"
+            />
+          </div>
+        </div>
+      </section>
+      {/* Products for Sale Section */}
+      <section id="products" className="py-20 bg-[#1a1a24]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
+              PRODUCTS FOR SALE
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+              Innovative Solutions for Your Business
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Discover our curated collection of cutting-edge products designed
+              to enhance your business operations, from 3D printed art covers to
+              IoT solutions for real estate and manufacturing.
+            </p>
+          </div>
 
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <ProductCategoryCard
+              title="3D Printed Art"
+              description="Custom 3D printed equipment and artistic covers for your creative projects"
+              icon={<Package className="h-8 w-8" />}
+              color="#9aff76"
+            />
+            <ProductCategoryCard
+              title="NFC Products"
+              description="Smart NFC solutions for social media integration and contactless interactions"
+              icon={<Smartphone className="h-8 w-8" />}
+              color="#76e4ff"
+            />
+            <ProductCategoryCard
+              title="IoT for Real Estate"
+              description="Internet of Things devices and sensors for smart property management"
+              icon={<Home className="h-8 w-8" />}
+              color="#a876ff"
+            />
+            <ProductCategoryCard
+              title="Manufacturing Solutions"
+              description="IoT and automation tools designed for small business manufacturing"
+              icon={<Factory className="h-8 w-8" />}
+              color="#ff7676"
+            />
+          </div>
+
+          <div className="text-center">
+            <Link to="/products">
+              <Button className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white px-8 py-4 text-lg rounded-full">
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                Browse All Products
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <p className="text-gray-300 mt-4">
+              No account required • Secure checkout with Stripe
+            </p>
+          </div>
+        </div>
+      </section>
       {/* CTA Section */}
-      <section className="py-20 bg-[#1a1a24]">
+      <section className="py-20 bg-[#121218]">
         <div className="container mx-auto px-4 text-center">
           <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
             XEMERGENCE! PRICED FAIRLY
@@ -348,82 +576,10 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
-
       {/* Footer */}
-      <footer className="bg-[#121218] py-12 border-t border-[#2a2a3a]">
+      <footer className="bg-[#1a1a24] py-8 border-t border-[#2a2a3a]">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <img
-                  src="/logo.png"
-                  alt="xEmergence Logo"
-                  className="h-8 w-8"
-                />
-                <span className="text-xl font-bold text-white">xEmergence</span>
-              </div>
-              <p className="text-gray-300 mb-4">
-                Unleash the Full Potential of Your Ideas with Our Accelerated
-                Solutions, Driving Your Success Forward
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4 text-white">Product</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    For Designers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    For Developers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    For Managers
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4 text-white">Company</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    Contact Us
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4 text-white">Legal</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white">
-                    Terms and Conditions
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-[#2a2a3a] pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-300 mb-4 md:mb-0">
               TrendBlend Inc 2023 All Rights Reserved
             </p>
@@ -470,6 +626,9 @@ interface PricingCardProps {
   features: string[];
   ctaText: string;
   featured?: boolean;
+  onSelect: () => void;
+  isLoading: boolean;
+  isFree?: boolean;
 }
 
 function PricingCard({
@@ -479,6 +638,9 @@ function PricingCard({
   features,
   ctaText,
   featured = false,
+  onSelect,
+  isLoading,
+  isFree = false,
 }: PricingCardProps) {
   return (
     <div
@@ -490,26 +652,10 @@ function PricingCard({
         </div>
         <div className="text-3xl font-bold text-white">
           {price}{" "}
-          <span className="text-lg font-normal text-gray-300">
-            per user/month
-          </span>
+          <span className="text-lg font-normal text-gray-300">/month</span>
         </div>
         {subtext && <div className="text-gray-300 mt-1">{subtext}</div>}
       </div>
-
-      <div className="flex justify-center gap-2 mb-6">
-        <button
-          className={`px-4 py-2 rounded-full ${featured ? "bg-[#7b68ee] text-white" : "bg-[#2a2a3a] text-gray-300"}`}
-        >
-          Monthly
-        </button>
-        <button
-          className={`px-4 py-2 rounded-full ${!featured ? "bg-[#7b68ee] text-white" : "bg-[#2a2a3a] text-gray-300"}`}
-        >
-          Yearly
-        </button>
-      </div>
-
       <ul className="space-y-4 mb-8 flex-grow">
         {features.map((feature, index) => (
           <li key={index} className="flex items-center gap-2">
@@ -531,12 +677,22 @@ function PricingCard({
           </li>
         ))}
       </ul>
-
       <button
-        className={`py-3 px-6 rounded-full flex items-center justify-center gap-2 ${featured ? "bg-[#7b68ee] hover:bg-[#6a5acd] text-white" : "bg-[#2a2a3a] hover:bg-[#353545] text-white"}`}
+        onClick={onSelect}
+        disabled={isLoading}
+        className={`py-3 px-6 rounded-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${featured ? "bg-[#7b68ee] hover:bg-[#6a5acd] text-white" : "bg-[#2a2a3a] hover:bg-[#353545] text-white"}`}
       >
-        {ctaText}
-        <ArrowRight className="h-4 w-4" />
+        {isLoading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            {ctaText}
+            <ArrowRight className="h-4 w-4" />
+          </>
+        )}
       </button>
     </div>
   );
@@ -619,6 +775,130 @@ function GlowingIcon({
           className={`${size === "sm" ? "w-4 h-4" : "w-8 h-8"} rounded-full flex items-center justify-center`}
           style={{ backgroundColor: color }}
         ></div>
+      </div>
+    </div>
+  );
+}
+
+function FeatureIcon({ icon: Icon, color }: { icon: any; color: string }) {
+  return (
+    <div className="relative w-16 h-16 flex items-center justify-center">
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{ backgroundColor: color, opacity: 0.2, filter: "blur(8px)" }}
+      ></div>
+      <div
+        className="relative w-12 h-12 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: color, opacity: 0.3 }}
+      >
+        <Icon className="w-6 h-6" style={{ color: "black" }} />
+      </div>
+    </div>
+  );
+}
+
+interface ProductCategoryCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+function ProductCategoryCard({
+  title,
+  description,
+  icon,
+  color,
+}: ProductCategoryCardProps) {
+  return (
+    <div className="bg-[#1e1e2d] p-6 rounded-lg border border-[#2a2a3a] hover:border-[#7b68ee] transition-all group">
+      <div className="mb-4 flex justify-center">
+        <div className="relative w-16 h-16 flex items-center justify-center">
+          <div
+            className="absolute inset-0 rounded-full group-hover:scale-110 transition-transform"
+            style={{
+              backgroundColor: color,
+              opacity: 0.2,
+              filter: "blur(8px)",
+            }}
+          ></div>
+          <div
+            className="relative w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: color, opacity: 0.3 }}
+          >
+            <div style={{ color: "black" }}>{icon}</div>
+          </div>
+        </div>
+      </div>
+      <h3 className="text-xl font-semibold mb-2 text-center text-white">
+        {title}
+      </h3>
+      <p className="text-gray-300 text-center text-sm">{description}</p>
+    </div>
+  );
+}
+
+interface AIServiceCardProps {
+  title: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+function AIServiceCard({ title, icon, color }: AIServiceCardProps) {
+  return (
+    <div className="bg-[#1e1e2d] p-4 rounded-lg flex flex-col items-center justify-center hover:bg-[#2a2a3a] transition-all group cursor-pointer">
+      <div className="relative mb-2">
+        <div
+          className="absolute inset-0 rounded-full group-hover:scale-110 transition-transform"
+          style={{
+            backgroundColor: color,
+            opacity: 0.2,
+            filter: "blur(8px)",
+          }}
+        ></div>
+        <div
+          className="relative w-10 h-10 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: color, opacity: 0.3 }}
+        >
+          <div style={{ color: "black" }}>{icon}</div>
+        </div>
+      </div>
+      <span className="text-xs text-white text-center font-medium">
+        {title}
+      </span>
+    </div>
+  );
+}
+
+interface PlatformSelectorProps {
+  title: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+function PlatformSelector({ title, icon, color }: PlatformSelectorProps) {
+  return (
+    <div className="bg-[#1e1e2d] p-4 rounded-lg border border-[#2a2a3a] hover:border-[#7b68ee] transition-all group cursor-pointer">
+      <div className="flex flex-col items-center">
+        <div className="relative mb-3">
+          <div
+            className="absolute inset-0 rounded-full group-hover:scale-110 transition-transform"
+            style={{
+              backgroundColor: color,
+              opacity: 0.2,
+              filter: "blur(8px)",
+            }}
+          ></div>
+          <div
+            className="relative w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: color, opacity: 0.3 }}
+          >
+            <div style={{ color: "black" }}>{icon}</div>
+          </div>
+        </div>
+        <h4 className="text-sm font-semibold text-white text-center">
+          {title}
+        </h4>
       </div>
     </div>
   );

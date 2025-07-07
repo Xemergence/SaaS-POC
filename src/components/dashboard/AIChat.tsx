@@ -8,48 +8,205 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Bot, Send, User, Sparkles } from "lucide-react";
+import { Bot, Send, User, Sparkles, AlertCircle, InfoIcon } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Define model options with their pricing information
+const MODEL_OPTIONS = [
+  {
+    id: "gpt-3.5-turbo",
+    name: "GPT-3.5 Turbo",
+    pricePerInputToken: 0.0015 / 1000, // $0.0015 per 1K tokens
+    pricePerOutputToken: 0.002 / 1000, // $0.002 per 1K tokens
+    description: "Fast and cost-effective for most tasks",
+  },
+  {
+    id: "gpt-4o",
+    name: "GPT-4o",
+    pricePerInputToken: 0.01 / 1000, // $0.01 per 1K tokens
+    pricePerOutputToken: 0.03 / 1000, // $0.03 per 1K tokens
+    description: "More capable for complex reasoning and specialized tasks",
+  },
+];
 
 export default function AIChat() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<
-    Array<{ text: string; isUser: boolean }>
+    Array<{ text: string; isUser: boolean; usage?: any }>
   >([
     {
-      text: "Hello! I'm your AI assistant. How can I help you analyze your business data today?",
+      text: "Hello! I'm your AI assistant specializing in real estate, IoT, social media, and AI cost optimization. How can I help you today?",
       isUser: false,
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalTokensUsed, setTotalTokensUsed] = useState(0);
+  const [selectedModel, setSelectedModel] = useState(MODEL_OPTIONS[0].id);
+  const [lastUsageCost, setLastUsageCost] = useState<number | null>(null);
 
-  const handleSendMessage = () => {
+  // Calculate estimated cost based on input length and selected model
+  const calculateEstimatedCost = (inputText: string, modelId: string) => {
+    // Rough estimation: 1 token ≈ 4 characters for English text
+    const estimatedInputTokens = Math.ceil(inputText.length / 4);
+    // Assume output is roughly 2x the input for estimation purposes
+    const estimatedOutputTokens = estimatedInputTokens * 2;
+
+    const model =
+      MODEL_OPTIONS.find((m) => m.id === modelId) || MODEL_OPTIONS[0];
+
+    return {
+      inputCost: estimatedInputTokens * model.pricePerInputToken,
+      outputCost: estimatedOutputTokens * model.pricePerOutputToken,
+      totalCost:
+        estimatedInputTokens * model.pricePerInputToken +
+        estimatedOutputTokens * model.pricePerOutputToken,
+    };
+  };
+
+  // Calculate actual cost from usage data
+  const calculateActualCost = (usage: any, modelId: string) => {
+    if (!usage) return 0;
+
+    const model =
+      MODEL_OPTIONS.find((m) => m.id === modelId) || MODEL_OPTIONS[0];
+
+    const inputCost = usage.prompt_tokens * model.pricePerInputToken;
+    const outputCost = usage.completion_tokens * model.pricePerOutputToken;
+
+    return inputCost + outputCost;
+  };
+
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
 
-    // Add user message
-    setMessages([...messages, { text: input, isUser: true }]);
+    const userMessage = { text: input.trim(), isUser: true };
+    setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+    setError(null);
+    setLastUsageCost(null);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "Based on your current data, I'm seeing a 15% increase in website traffic compared to last month.",
-        "Your AI usage costs have increased by 8% this month. Would you like me to suggest optimization strategies?",
-        "I've analyzed your sensor data and noticed some anomalies in Server Room B. You might want to check the temperature sensors.",
-        "Your revenue is trending upward by approximately 12% quarter-over-quarter. This is above industry average.",
-        "I've detected unusual network traffic patterns at 2:00 AM last night. Would you like me to generate a detailed report?",
-      ];
+    try {
+      // Prepare conversation history for context
+      const conversationHistory = messages
+        .slice(-6) // Keep last 6 messages for context (to control cost)
+        .map((msg) => ({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.text,
+        }));
 
+      console.log("Calling Edge Function with:", {
+        message: input.trim(),
+        model: selectedModel,
+        conversationHistoryLength: conversationHistory.length,
+      });
+
+      const { data, error: functionError } = await supabase.functions.invoke(
+        "supabase-functions-ai-chat",
+        {
+          body: {
+            message: input.trim(),
+            conversationHistory,
+            model: selectedModel,
+          },
+        },
+      );
+
+      console.log("Supabase function invoke result:", {
+        data,
+        functionError,
+        hasData: !!data,
+        hasError: !!functionError,
+      });
+
+      console.log("Edge Function response:", { data, functionError });
+
+      if (functionError) {
+        throw new Error(functionError.message || "Failed to get AI response");
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      const assistantMessage = {
+        text: data.message || "Sorry, I could not generate a response.",
+        isUser: false,
+        usage: data.usage,
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      // Track token usage for cost monitoring
+      if (data.usage?.total_tokens) {
+        setTotalTokensUsed((prev) => prev + data.usage.total_tokens);
+
+        // Calculate and set the cost of this interaction
+        const cost = calculateActualCost(data.usage, selectedModel);
+        setLastUsageCost(cost);
+      }
+    } catch (err: any) {
+      console.error("AI Chat error - Full details:", {
+        error: err,
+        message: err?.message,
+        stack: err?.stack,
+        name: err?.name,
+      });
+
+      let errorMessage = "Failed to get AI response";
+      let userMessage = "Sorry, I encountered an error. Please try again.";
+
+      if (err.message) {
+        errorMessage = err.message;
+
+        // Provide specific user-friendly messages for common errors
+        if (
+          err.message.includes("quota exceeded") ||
+          err.message.includes("insufficient_quota")
+        ) {
+          userMessage =
+            "The OpenAI API quota has been exceeded. This means your OpenAI account needs additional funds. Please visit platform.openai.com/account/billing to add funds to your account.";
+        } else if (err.message.includes("Rate limit")) {
+          userMessage =
+            "Too many requests. Please wait a moment before trying again.";
+        } else if (err.message.includes("Authentication")) {
+          userMessage = "Authentication error. Please contact support.";
+        } else if (err.message.includes("service unavailable")) {
+          userMessage =
+            "AI service is temporarily unavailable. Please try again in a few minutes.";
+        } else {
+          userMessage = `Sorry, I encountered an error: ${err.message}. Please try again.`;
+        }
+      } else if (typeof err === "string") {
+        errorMessage = err;
+        userMessage = `Sorry, I encountered an error: ${err}. Please try again.`;
+      }
+
+      setError(errorMessage);
       setMessages((prev) => [
         ...prev,
         {
-          text: responses[Math.floor(Math.random() * responses.length)],
+          text: userMessage,
           isUser: false,
         },
       ]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
-
-    setInput("");
+      setInput("");
+    }
   };
 
   return (
@@ -131,45 +288,154 @@ export default function AIChat() {
           {/* Chat Input */}
           <Card className="bg-[#1e1e2d] border-[#2a2a3a]">
             <CardContent className="pt-4">
-              <div className="flex items-center gap-2">
-                <Input
-                  placeholder="Ask a question about your business data..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  className="bg-[#2a2a3a] border-[#3a3a4a] text-white"
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+              <div className="flex flex-col gap-3">
+                {/* Model Selection */}
+                <div className="flex items-center gap-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center text-white text-sm">
+                          <span>Model</span>
+                          <InfoIcon className="h-3 w-3 ml-1 text-gray-400" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-[#2a2a3a] text-white">
+                        <p>Select the AI model to use for your query</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <Select
+                    value={selectedModel}
+                    onValueChange={setSelectedModel}
+                    disabled={isLoading}
+                  >
+                    <SelectTrigger className="w-[180px] bg-[#2a2a3a] border-[#3a3a4a] text-white">
+                      <SelectValue placeholder="Select model" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#2a2a3a] border-[#3a3a4a] text-white">
+                      {MODEL_OPTIONS.map((model) => (
+                        <SelectItem
+                          key={model.id}
+                          value={model.id}
+                          className="text-white hover:bg-[#3a3a4a]"
+                        >
+                          <div className="flex justify-between items-center w-full">
+                            <span>{model.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Cost estimate display */}
+                  <div className="ml-2 text-xs text-gray-400">
+                    {input.trim() ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            Est. cost: $
+                            {calculateEstimatedCost(
+                              input,
+                              selectedModel,
+                            ).totalCost.toFixed(6)}
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-[#2a2a3a] text-white">
+                            <p>
+                              {
+                                MODEL_OPTIONS.find(
+                                  (m) => m.id === selectedModel,
+                                )?.description
+                              }
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <span>Enter text for cost estimate</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Input and Send Button */}
+                <div className="flex items-center gap-2">
+                  <Input
+                    placeholder="Ask about real estate, IoT, social media, or AI costs..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && !isLoading && handleSendMessage()
+                    }
+                    className="bg-[#2a2a3a] border-[#3a3a4a] text-white"
+                    disabled={isLoading}
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white"
+                    disabled={isLoading || !input.trim()}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
+              {error && (
+                <div className="mt-2 flex items-center gap-2 text-red-400 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{error}</span>
+                </div>
+              )}
+              {totalTokensUsed > 0 && (
+                <div className="mt-2 text-xs text-gray-400">
+                  Total tokens used: {totalTokensUsed}
+                  {lastUsageCost !== null && (
+                    <span className="ml-2">
+                      Last message cost: ${lastUsageCost.toFixed(6)}
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="mt-2 flex flex-wrap gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
-                  onClick={() => setInput("Analyze my website traffic trends")}
+                  onClick={() =>
+                    setInput("What are the current real estate market trends?")
+                  }
                 >
-                  Analyze traffic trends
+                  Real Estate Trends
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
-                  onClick={() => setInput("Optimize my AI usage costs")}
+                  onClick={() =>
+                    setInput("How can I optimize my IoT sensor network?")
+                  }
                 >
-                  Optimize AI costs
+                  IoT Optimization
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
-                  onClick={() => setInput("Forecast next month's revenue")}
+                  onClick={() =>
+                    setInput(
+                      "What's the best social media strategy for my business?",
+                    )
+                  }
                 >
-                  Forecast revenue
+                  Social Media Strategy
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
+                  onClick={() =>
+                    setInput("How can I reduce my AI prompt costs?")
+                  }
+                >
+                  Reduce AI Costs
                 </Button>
               </div>
             </CardContent>

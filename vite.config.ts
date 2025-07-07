@@ -12,9 +12,40 @@ if (process.env.TEMPO === "true") {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === "development" ? "/" : process.env.VITE_BASE_PATH || "/",
+  base:
+    process.env.NODE_ENV === "development"
+      ? "/"
+      : process.env.VITE_BASE_PATH || "/",
   optimizeDeps: {
     entries: ["src/main.tsx", "src/tempobook/**/*"],
+    // Include dependencies that might be missed in the dependency optimization
+    include: [
+      "react-router-dom",
+      "lucide-react",
+      "@/components/ui/button",
+      "@/lib/utils",
+    ],
+  },
+  build: {
+    // Optimize chunk size for better loading performance
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor code into separate chunks
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": ["lucide-react", "@radix-ui/react-slot"],
+          // Group dashboard components
+          "dashboard-core": [
+            "./src/components/dashboard/DashboardLayout.tsx",
+            "./src/components/dashboard/Sidebar.tsx",
+            "./src/components/dashboard/Header.tsx",
+          ],
+        },
+      },
+    },
+    // Enable source map for better debugging
+    sourcemap: process.env.NODE_ENV === "development",
   },
   plugins: [
     react({
@@ -31,5 +62,5 @@ export default defineConfig({
   server: {
     // @ts-ignore
     allowedHosts: true,
-  }
+  },
 });
