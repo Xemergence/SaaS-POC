@@ -20,6 +20,10 @@ import {
   Cpu,
   ShoppingCart,
   Package,
+  Home,
+  Bell,
+  Settings,
+  Shield,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -191,112 +195,96 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ModernFeatureCard
               title="Get Focused"
               description="A place for new issues and ideas. Concentrate on the essentials and disregard diversions."
-              icon={<Target className="h-12 w-12 text-[#9aff76]" />}
+              iconColor="#9aff76"
+              icon={<Target className="h-6 w-6" />}
             />
-            <FeatureCard
+            <ModernFeatureCard
               title="Save time"
               description="Define and organize larger pieces of work with our comprehensive dashboard tools."
-              icon={<Clock className="h-12 w-12 text-[#ff7676]" />}
+              iconColor="#ff7676"
+              icon={<Clock className="h-6 w-6" />}
             />
-            <FeatureCard
+            <ModernFeatureCard
               title="Gen AI to Co-Create"
               description="Keep work in motion. No longer heavy files with our AI-powered analytics and insights."
-              icon={<Brain className="h-12 w-12 text-[#a876ff]" />}
+              iconColor="#a876ff"
+              icon={<Brain className="h-6 w-6" />}
             />
-            <FeatureCard
+            <ModernFeatureCard
               title="Acquire and Monitor your Users"
               description="Track website traffic, revenue metrics, operating costs, and database usage with real-time updates."
-              icon={<Users className="h-12 w-12 text-[#76ffb8]" />}
+              iconColor="#76ffb8"
+              icon={<Users className="h-6 w-6" />}
+              highlighted={true}
             />
-            <FeatureCard
+            <ModernFeatureCard
               title="Single Source Documentation"
               description="All your business metrics and documentation in one place for easy access and management."
-              icon={<FileText className="h-12 w-12 text-[#c576ff]" />}
+              iconColor="#c576ff"
+              icon={<FileText className="h-6 w-6" />}
             />
-            <FeatureCard
+            <ModernFeatureCard
               title="Get Ahead!"
               description="Stay ahead of the competition with our cutting-edge tools and real-time analytics."
-              icon={<TrendingUp className="h-12 w-12 text-[#76e4ff]" />}
+              iconColor="#76e4ff"
+              icon={<TrendingUp className="h-6 w-6" />}
             />
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Team Section */}
       <section className="py-20 bg-[#1a1a24]">
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8">
-          <div className="bg-[#1e1e2d] p-8 rounded-lg">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jether"
-                  alt="User"
-                  className="w-12 h-12 rounded-full bg-[#2a2a3a]"
+        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                Team members
+              </h2>
+              <div className="space-y-6">
+                <TeamMember
+                  name="Jether"
+                  role="AI integration specialist"
+                  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=Jether"
                 />
-                <div>
-                  <h3 className="font-bold text-white">Jether</h3>
-                  <p className="text-sm text-gray-300">
-                    AI integration specialist
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Johana"
-                  alt="User"
-                  className="w-12 h-12 rounded-full bg-[#2a2a3a]"
+                <TeamMember
+                  name="Vissepo"
+                  role="Expands her reach through analytics"
+                  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=Vissepo"
                 />
-                <div>
-                  <h3 className="font-bold text-white">Johana</h3>
-                  <p className="text-sm text-gray-300">
-                    Expands her reach through analytics
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Vissepo"
-                  alt="User"
-                  className="w-12 h-12 rounded-full bg-[#2a2a3a]"
+                <TeamMember
+                  name="Johan"
+                  role="Intelligent systems specialist"
+                  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=Johan"
                 />
-                <div>
-                  <h3 className="font-bold text-white">Vissepo</h3>
-                  <p className="text-sm text-gray-300">
-                    Intelligent systems specialist
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-white">Get focused</h3>
-                <p className="text-gray-300 mt-2">
-                  Concentrate on the essentials and disregard diversions
-                </p>
               </div>
             </div>
+            <div className="pt-8 border-t border-[#2a2a3a]">
+              <h3 className="text-xl font-bold text-white mb-2">Get focused</h3>
+              <p className="text-gray-300">
+                Concentrate on the essentials and disregard diversions
+              </p>
+            </div>
           </div>
-          <div className="bg-[#1e1e2d] p-8 rounded-lg">
-            <div className="flex flex-col h-full justify-between">
-              <div className="mb-6">
-                <img
-                  src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&q=80"
-                  alt="Workflow"
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white">
-                  Enhance your Workflow with Sustainability at its Core
-                </h3>
-                <p className="text-gray-300 mt-2">
-                  Simplify intricate processes, make informed decisions, and
-                  focus on core business activities without getting lost in the
-                  data maze.
-                </p>
-              </div>
+          <div className="flex flex-col justify-center">
+            <div className="bg-[#1e1e2d] p-8 rounded-lg">
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Enhance your Workflow with Sustainability at its Core
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Simplify intricate processes, make informed decisions, and focus
+                on core business activities without getting lost in the data
+                maze.
+              </p>
+              <img
+                src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&q=80"
+                alt="Workflow"
+                className="w-full h-48 object-cover rounded-lg"
+              />
             </div>
           </div>
         </div>
@@ -305,16 +293,6 @@ export default function LandingPage() {
       {/* AI Tools Section */}
       <section className="py-20 bg-[#121218]">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12">
-          <div>
-            <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-[#7b68ee] opacity-20 blur-xl"></div>
-              <img
-                src="https://images.unsplash.com/photo-1581092921461-39b9d007dfb9?w=800&q=80"
-                alt="AI Tools"
-                className="relative rounded-lg w-full"
-              />
-            </div>
-          </div>
           <div className="flex flex-col justify-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
               Your favourite AI tools
@@ -323,80 +301,110 @@ export default function LandingPage() {
               xEmergence operates with every tool you adore, enabling smooth
               shifts across your work processes
             </p>
-            <div className="grid grid-cols-3 gap-4">
-              <AIToolCard
-                icon={<Bot className="h-8 w-8 text-[#7b68ee]" />}
-                name="ChatGPT"
-              />
-              <AIToolCard
-                icon={<Brain className="h-8 w-8 text-[#9aff76]" />}
-                name="Claude"
-              />
-              <AIToolCard
-                icon={<Zap className="h-8 w-8 text-[#ff7676]" />}
-                name="Gemini"
-              />
-              <AIToolCard
-                icon={<MessageSquare className="h-8 w-8 text-[#76ffb8]" />}
-                name="Perplexity"
-              />
-              <AIToolCard
-                icon={<Image className="h-8 w-8 text-[#a876ff]" />}
-                name="DALL-E"
-              />
-              <AIToolCard
-                icon={<Code className="h-8 w-8 text-[#76e4ff]" />}
-                name="GitHub Copilot"
-              />
-              <AIToolCard
-                icon={<Database className="h-8 w-8 text-[#ffb876]" />}
-                name="Supabase"
-              />
-              <AIToolCard
-                icon={<Cpu className="h-8 w-8 text-[#c576ff]" />}
-                name="OpenAI"
-              />
-              <AIToolCard
-                icon={<Brain className="h-8 w-8 text-[#9aff76]" />}
-                name="Anthropic"
-              />
+
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold text-white mb-6">
+                Centralized AI Control Tower
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Our platform serves as a unified control tower, powered by
+                advanced AI in the backend, designed to enhance operational
+                efficiency and provide comprehensive visualization. By
+                centralizing all your tools and platforms under one intelligent
+                system, we empower end users with seamless integration,
+                real-time insights, and automated workflows that transform how
+                businesses operate and make data-driven decisions.
+              </p>
+              <p className="text-gray-300">
+                Access a comprehensive suite of AI-powered tools designed to
+                streamline your workflow, from intelligent scheduling and
+                analytics to automated notifications and security management.
+              </p>
             </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <AIToolIconCard
+              icon={<Bot className="h-6 w-6" />}
+              name="Scheduling"
+              color="#9aff76"
+            />
+            <AIToolIconCard
+              icon={<MessageSquare className="h-6 w-6" />}
+              name="AI Chat"
+              color="#76e4ff"
+            />
+            <AIToolIconCard
+              icon={<TrendingUp className="h-6 w-6" />}
+              name="Analytics"
+              color="#a876ff"
+            />
+            <AIToolIconCard
+              icon={<Bot className="h-6 w-6" />}
+              name="AI Assistant"
+              color="#ff7676"
+            />
+            <AIToolIconCard
+              icon={<Bell className="h-6 w-6" />}
+              name="Notifications"
+              color="#ffb876"
+            />
+            <AIToolIconCard
+              icon={<Settings className="h-6 w-6" />}
+              name="Configuration"
+              color="#c576ff"
+            />
+            <AIToolIconCard
+              icon={<Shield className="h-6 w-6" />}
+              name="Security"
+              color="#9aff76"
+            />
+            <AIToolIconCard
+              icon={<Zap className="h-6 w-6" />}
+              name="Automation"
+              color="#76e4ff"
+            />
+            <AIToolIconCard
+              icon={<Database className="h-6 w-6" />}
+              name="Data Management"
+              color="#ff7676"
+            />
           </div>
         </div>
       </section>
 
-      {/* AI Platforms Selector Section */}
+      {/* Platform Integrations Section */}
       <section className="py-20 bg-[#1a1a24]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
-              AI PLATFORMS
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              Choose Your AI Platform
+              Platform Integrations
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              Select from our supported AI platforms to enhance your business
-              operations
+              Seamlessly connect with industry-specific platforms
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-12">
-            {aiPlatforms.map((platform) => {
-              const IconComponent = platform.icon;
-              return (
-                <button
-                  key={platform.id}
-                  className="flex items-center gap-3 px-6 py-4 rounded-full bg-[#1e1e2d] text-gray-300 hover:bg-[#2a2a3a] hover:text-white hover:border-[#7b68ee] border border-[#2a2a3a] transition-all"
-                >
-                  <IconComponent className="h-5 w-5" />
-                  <span className="font-medium">{platform.name}</span>
-                  <span className="text-xs bg-[#2a2a3a] px-2 py-1 rounded-full">
-                    {platform.category}
-                  </span>
-                </button>
-              );
-            })}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <PlatformCard
+              name="Education"
+              color="#9aff76"
+              icon={<Brain className="h-6 w-6" />}
+            />
+            <PlatformCard
+              name="Real Estate"
+              color="#a876ff"
+              icon={<Home className="h-6 w-6" />}
+            />
+            <PlatformCard
+              name="Services"
+              color="#76e4ff"
+              icon={<Package className="h-6 w-6" />}
+            />
+            <PlatformCard
+              name="Pregnancy Platform"
+              color="#ff7676"
+              icon={<Users className="h-6 w-6" />}
+            />
           </div>
         </div>
       </section>
@@ -431,49 +439,6 @@ export default function LandingPage() {
               View All Categories
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-[#1a1a24]">
-        <div className="container mx-auto px-4 text-center">
-          <div className="text-[#7b68ee] uppercase tracking-wider text-sm font-medium mb-2">
-            XEMERGENCE! PRICED FAIRLY
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            Try it before making a commitment
-          </h2>
-          <div className="max-w-md mx-auto">
-            <div className="flex rounded-lg overflow-hidden border border-[#2a2a3a] mb-6">
-              <div className="bg-[#1e1e2d] p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="email"
-                placeholder="name@email.com"
-                className="flex-1 bg-[#1e1e2d] text-white px-4 py-3 outline-none"
-              />
-              <button className="bg-[#7b68ee] hover:bg-[#6a5acd] text-white px-6 py-3">
-                Subscribe
-              </button>
-            </div>
-          </div>
-          <p className="text-gray-300 mt-4">
-            Concentrate on the essentials and disregard diversions
-          </p>
         </div>
       </section>
 
@@ -587,6 +552,112 @@ function FeatureCard({ title, description, icon }: FeatureCardProps) {
         {title}
       </h3>
       <p className="text-gray-300 text-center">{description}</p>
+    </div>
+  );
+}
+
+interface ModernFeatureCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  iconColor: string;
+  highlighted?: boolean;
+}
+
+function ModernFeatureCard({
+  title,
+  description,
+  icon,
+  iconColor,
+  highlighted = false,
+}: ModernFeatureCardProps) {
+  return (
+    <div
+      className={`bg-[#2a2a3a] p-6 rounded-lg transition-all ${
+        highlighted ? "border-2 border-[#7b68ee]" : "border border-[#3a3a4a]"
+      }`}
+    >
+      <div className="mb-4">
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
+          style={{
+            backgroundColor: iconColor + "40",
+            color: iconColor,
+          }}
+        >
+          {icon}
+        </div>
+      </div>
+      <h3 className="text-xl font-semibold mb-3 text-white">{title}</h3>
+      <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
+    </div>
+  );
+}
+
+interface TeamMemberProps {
+  name: string;
+  role: string;
+  avatar: string;
+}
+
+function TeamMember({ name, role, avatar }: TeamMemberProps) {
+  return (
+    <div className="flex items-center gap-4">
+      <img
+        src={avatar}
+        alt={name}
+        className="w-12 h-12 rounded-full bg-[#2a2a3a]"
+      />
+      <div>
+        <h3 className="font-bold text-white">{name}</h3>
+        <p className="text-sm text-gray-300">{role}</p>
+      </div>
+    </div>
+  );
+}
+
+interface AIToolIconCardProps {
+  icon: React.ReactNode;
+  name: string;
+  color: string;
+}
+
+function AIToolIconCard({ icon, name, color }: AIToolIconCardProps) {
+  return (
+    <div className="bg-[#2a2a3a] p-4 rounded-lg flex flex-col items-center justify-center gap-3 hover:bg-[#353545] transition-colors">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center"
+        style={{
+          backgroundColor: color + "40",
+          color: color,
+        }}
+      >
+        {icon}
+      </div>
+      <span className="text-sm text-white font-medium text-center">{name}</span>
+    </div>
+  );
+}
+
+interface PlatformCardProps {
+  name: string;
+  color: string;
+  icon: React.ReactNode;
+}
+
+function PlatformCard({ name, color, icon }: PlatformCardProps) {
+  return (
+    <div className="bg-[#2a2a3a] p-6 rounded-lg flex flex-col items-center justify-center gap-4 hover:bg-[#353545] transition-colors">
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center"
+        style={{
+          backgroundColor: color + "40",
+          color: color,
+        }}
+      >
+        {icon}
+      </div>
+      <span className="text-white font-medium text-center">{name}</span>
     </div>
   );
 }
@@ -760,23 +831,6 @@ function AIToolCard({ icon, name }: { icon: React.ReactNode; name: string }) {
     </div>
   );
 }
-
-const aiPlatforms = [
-  { id: "chatgpt", name: "ChatGPT", category: "LLM", icon: Bot },
-  { id: "claude", name: "Claude", category: "LLM", icon: Brain },
-  { id: "gemini", name: "Gemini", category: "LLM", icon: Zap },
-  { id: "dalle", name: "DALL-E", category: "Image", icon: Image },
-  { id: "midjourney", name: "Midjourney", category: "Image", icon: Image },
-  { id: "copilot", name: "GitHub Copilot", category: "Code", icon: Code },
-  { id: "openai", name: "OpenAI API", category: "API", icon: Cpu },
-  { id: "anthropic", name: "Anthropic", category: "API", icon: Brain },
-  {
-    id: "perplexity",
-    name: "Perplexity",
-    category: "Search",
-    icon: MessageSquare,
-  },
-];
 
 function getRandomColor() {
   const colors = [
