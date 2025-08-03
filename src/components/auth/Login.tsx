@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,31 +17,91 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate authentication
-    setTimeout(() => {
+    try {
+      // Authenticate with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("Login error:", error);
+        alert(`Failed to sign in: ${error.message}`);
+        return;
+      }
+
+      if (data.user) {
+        // Check if email is verified
+        if (!data.user.email_confirmed_at) {
+          alert(
+            "Please verify your email address before signing in. Check your email for a verification link.",
+          );
+          return;
+        }
+
+        // Record session info
+        try {
+          await supabase.from("user_sessions").insert({
+            user_id: data.user.id,
+            ip_address: "client-side",
+            user_agent: navigator.userAgent,
+          });
+        } catch (sessionError) {
+          console.warn("Failed to record session:", sessionError);
+          // Don't block login if session recording fails
+        }
+
+        // Create or update user profile
+        try {
+          const { error: profileError } = await supabase.from("users").upsert(
+            {
+              id: data.user.id,
+              email: data.user.email,
+              first_name: data.user.user_metadata?.first_name,
+              last_name: data.user.user_metadata?.last_name,
+              avatar_url: data.user.user_metadata?.avatar_url,
+              updated_at: new Date().toISOString(),
+              role: "user", // Ensure role is always set to user by default
+            },
+            {
+              onConflict: "id",
+            },
+          );
+
+          if (profileError) {
+            console.warn("Failed to update user profile:", profileError);
+          }
+        } catch (profileError) {
+          console.warn("Failed to create/update user profile:", profileError);
+        }
+
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Failed to sign in. Please check your credentials.");
+    } finally {
       setIsLoading(false);
-      navigate("/dashboard");
-    }, 1500);
+    }
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-[#121218]">
+    <div className="flex min-h-screen w-full items-center justify-center bg-[#121218] px-4 py-8">
       <div className="absolute top-6 left-6">
         <Link
           to="/"
           className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
         >
-          <img
-            src="/logo-black.png"
-            alt="xEmergence Logo"
-            className="h-8 w-8 rounded-full object-cover"
-          />
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7b68ee] to-[#9b59b6] flex items-center justify-center">
+            <span className="text-white font-bold text-xs">xE</span>
+          </div>
           <span className="text-xl font-bold text-white">xEmergence</span>
         </Link>
       </div>
@@ -100,32 +161,8 @@ export default function Login() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#2a2a3a]" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-[#1e1e2d] px-2 text-gray-300">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Button
-              variant="outline"
-              className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
-            >
-              Google
-            </Button>
-            <Button
-              variant="outline"
-              className="border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545]"
-            >
-              GitHub
-            </Button>
-          </div>
-          <div className="text-center mt-4 text-gray-300">
+        <CardFooter>
+          <div className="text-center w-full text-gray-300">
             Don't have an account?{" "}
             <Link to="/signup">
               <Button

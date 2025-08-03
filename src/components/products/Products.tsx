@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -11,16 +12,8 @@ import {
   Loader2,
   Check,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import {
-  getCurrentUserWithRole,
-  getUserDisplayName,
-  getUserInitials,
-  getAvatarSeed,
-  UserRole,
-} from "@/lib/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Product {
   id: string;
@@ -40,12 +33,13 @@ interface Product {
 const products: Product[] = [
   {
     id: "3d-art-cover-1",
-    name: "3D Printed NFC Keychains",
+    name: "Custom Art Display Cover",
     description:
-      "Custom NFC keychains with your logo or design, perfect for business branding and promotions",
+      "Premium 3D printed protective cover for artwork displays with customizable designs",
     price: 89.99,
     originalPrice: 119.99,
-    image: "/nfc-keychain.png",
+    image:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
     category: "3d-art",
     priceId: "price_3d_art_cover_basic",
     features: [
@@ -60,9 +54,9 @@ const products: Product[] = [
   },
   {
     id: "3d-sculpture-base",
-    name: "Custom 3D Print",
+    name: "Modular Sculpture Base",
     description:
-      "Upload your logo or design for custom 3D printing on various products including keychains, coasters, and QR code readers",
+      "Adjustable 3D printed base system for sculptures and art installations",
     price: 149.99,
     image:
       "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
@@ -204,39 +198,21 @@ const products: Product[] = [
 ];
 
 const categories = [
-  { id: "all", name: "All Products", icon: Package, disabled: false },
-  { id: "3d-art", name: "3D Printed Art", icon: Package, disabled: false },
-  { id: "nfc", name: "NFC Products", icon: Smartphone, disabled: true },
-  { id: "iot-realestate", name: "IoT Real Estate", icon: Home, disabled: true },
-  { id: "manufacturing", name: "Manufacturing", icon: Factory, disabled: true },
+  { id: "all", name: "All Products", icon: Package },
+  { id: "3d-art", name: "3D Printed Art", icon: Package },
+  { id: "nfc", name: "NFC Products", icon: Smartphone },
+  { id: "iot-realestate", name: "IoT Real Estate", icon: Home },
+  { id: "manufacturing", name: "Manufacturing", icon: Factory },
 ];
 
 export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
   const [cart, setCart] = useState<string[]>([]);
-  const [user, setUser] = useState<UserRole | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const currentUser = await getCurrentUserWithRole();
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Error checking user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkUser();
-  }, []);
-
-  const filteredProducts = products.filter((product) =>
-    selectedCategory === "all"
-      ? product.category === "3d-art"
-      : product.category === selectedCategory,
+  const filteredProducts = products.filter(
+    (product) =>
+      selectedCategory === "all" || product.category === selectedCategory,
   );
 
   const handlePurchase = async (product: Product) => {
@@ -295,7 +271,10 @@ export default function Products() {
               <span>Back to Home</span>
             </Link>
             <div className="h-6 w-px bg-[#2a2a3a]"></div>
-            <Link to="/" className="flex items-center gap-2">
+            <Link
+              to="/"
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7b68ee] to-[#9b59b6] flex items-center justify-center">
                 <span className="text-white font-bold text-xs">xE</span>
               </div>
@@ -305,39 +284,14 @@ export default function Products() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${getAvatarSeed(user)}`}
-                    alt="User Avatar"
-                  />
-                  <AvatarFallback className="bg-[#7b68ee] text-white text-xs font-medium">
-                    {getUserInitials(user)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-white font-medium">
-                  {getUserDisplayName(user)}
-                </span>
-                <div className="relative">
-                  <ShoppingCart className="h-6 w-6 text-white" />
-                  {cart.length > 0 && (
-                    <div className="absolute -top-2 -right-2 bg-[#7b68ee] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cart.length}
-                    </div>
-                  )}
+            <div className="relative">
+              <ShoppingCart className="h-6 w-6 text-white" />
+              {cart.length > 0 && (
+                <div className="absolute -top-2 -right-2 bg-[#7b68ee] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.length}
                 </div>
-              </div>
-            ) : (
-              <div className="relative">
-                <ShoppingCart className="h-6 w-6 text-white" />
-                {cart.length > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-[#7b68ee] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cart.length}
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -368,23 +322,15 @@ export default function Products() {
               return (
                 <button
                   key={category.id}
-                  onClick={() =>
-                    !category.disabled && setSelectedCategory(category.id)
-                  }
-                  disabled={category.disabled}
+                  onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all ${
                     selectedCategory === category.id
                       ? "bg-[#7b68ee] text-white"
-                      : category.disabled
-                        ? "bg-[#1e1e2d] text-gray-500 opacity-50 cursor-not-allowed"
-                        : "bg-[#1e1e2d] text-gray-300 hover:bg-[#2a2a3a] hover:text-white"
+                      : "bg-[#1e1e2d] text-gray-300 hover:bg-[#2a2a3a] hover:text-white"
                   }`}
                 >
                   <IconComponent className="h-4 w-4" />
                   <span>{category.name}</span>
-                  {category.disabled && (
-                    <span className="ml-2 text-xs">(Coming Soon)</span>
-                  )}
                 </button>
               );
             })}
@@ -413,7 +359,10 @@ export default function Products() {
       {/* Footer */}
       <footer className="bg-[#1e1e2d] py-12 border-t border-[#2a2a3a]">
         <div className="container mx-auto px-4 text-center">
-          <Link to="/" className="flex items-center justify-center gap-2 mb-4">
+          <Link
+            to="/"
+            className="flex items-center justify-center gap-2 mb-4 hover:opacity-80 transition-opacity"
+          >
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7b68ee] to-[#9b59b6] flex items-center justify-center">
               <span className="text-white font-bold text-xs">xE</span>
             </div>
@@ -422,6 +371,7 @@ export default function Products() {
           <p className="text-gray-300 mb-4">
             Secure payments powered by Stripe • No account required
           </p>
+          <Separator className="bg-[#2a2a3a] mb-6" />
           <div className="flex justify-center gap-6">
             <Link
               to="/"
@@ -463,24 +413,6 @@ function ProductCard({
   isLoading,
   isInCart,
 }: ProductCardProps) {
-  const [selectedProductType, setSelectedProductType] =
-    useState<string>("nfc-keychain");
-  const [uploadedLogo, setUploadedLogo] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string>("");
-
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setUploadedLogo(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLogoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Removed customization options for cleaner product display
   return (
     <div className="bg-[#1e1e2d] rounded-lg border border-[#2a2a3a] hover:border-[#7b68ee] transition-all group overflow-hidden h-[580px] flex flex-col">
       {/* Product Image */}
@@ -489,14 +421,9 @@ function ProductCard({
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="eager"
-          fetchPriority="high"
         />
-        <div className="absolute top-3 left-3 bg-[#7b68ee] text-white px-3 py-1 rounded-full text-xs font-medium">
-          COMING SOON
-        </div>
         {product.originalPrice && (
-          <div className="absolute top-3 right-3 bg-[#ff7676] text-white px-2 py-1 rounded-full text-xs font-medium">
+          <div className="absolute top-3 left-3 bg-[#ff7676] text-white px-2 py-1 rounded-full text-xs font-medium">
             SALE
           </div>
         )}
@@ -509,7 +436,22 @@ function ProductCard({
 
       {/* Product Info */}
       <div className="p-6 flex flex-col flex-grow">
-        {/* Removed customization box for 3D Printed NFC Keychains */}
+        {/* Rating Section - Fixed Height */}
+        <div className="flex items-center gap-2 mb-3 h-5">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-4 w-4 ${
+                  i < Math.floor(product.rating)
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-400"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-sm text-gray-300">({product.reviews})</span>
+        </div>
 
         {/* Product Title - Fixed Height */}
         <div className="h-14 mb-3">
@@ -560,47 +502,37 @@ function ProductCard({
 
         {/* Actions - Fixed at bottom with consistent dimensions */}
         <div className="mt-auto">
-          {product.id === "3d-sculpture-base" ? (
+          <div className="flex gap-3">
             <Button
-              onClick={() => (window.location.href = "/custom-3d-print")}
-              disabled={!product.inStock}
-              className="w-full h-12 bg-[#7b68ee] hover:bg-[#6a5acd] text-white disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              onClick={onPurchase}
+              disabled={isLoading || !product.inStock}
+              className="flex-1 h-12 bg-[#7b68ee] hover:bg-[#6a5acd] text-white disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
-              Customize Design
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Buy Now
+                </>
+              )}
             </Button>
-          ) : (
-            <div className="flex gap-3">
-              <Button
-                onClick={onPurchase}
-                disabled={isLoading || !product.inStock}
-                className="flex-1 h-12 bg-[#7b68ee] hover:bg-[#6a5acd] text-white disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    Buy Now
-                  </>
-                )}
-              </Button>
-              <Button
-                onClick={onAddToCart}
-                disabled={!product.inStock || isInCart}
-                variant="outline"
-                className="w-12 h-12 border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545] disabled:opacity-50 flex-shrink-0"
-              >
-                {isInCart ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <ShoppingCart className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          )}
+            <Button
+              onClick={onAddToCart}
+              disabled={!product.inStock || isInCart}
+              variant="outline"
+              className="w-12 h-12 border-[#2a2a3a] bg-[#2a2a3a] text-white hover:bg-[#353545] disabled:opacity-50 flex-shrink-0"
+            >
+              {isInCart ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <ShoppingCart className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

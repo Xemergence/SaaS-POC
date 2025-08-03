@@ -7,6 +7,7 @@ const LandingPage = lazy(() => import("./components/landing/LandingPage"));
 const Login = lazy(() => import("./components/auth/Login"));
 const SignUp = lazy(() => import("./components/auth/SignUp"));
 const Products = lazy(() => import("./components/Products"));
+const CustomPrint = lazy(() => import("./components/CustomPrint"));
 const DashboardLayout = lazy(
   () => import("./components/dashboard/DashboardLayout"),
 );
@@ -19,6 +20,7 @@ const AIChat = lazy(() => import("./components/dashboard/AIChat"));
 const Sensors = lazy(() => import("./components/dashboard/Sensors"));
 const SocialMedia = lazy(() => import("./components/dashboard/SocialMedia"));
 const Settings = lazy(() => import("./components/dashboard/Settings"));
+const ProtectedRoute = lazy(() => import("./components/auth/ProtectedRoute"));
 
 function App() {
   return (
@@ -35,7 +37,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="/custom-3d-print" element={<CustomPrint />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
             <Route path="financial" element={<Financial />} />
             <Route path="calendar" element={<CalendarView />} />

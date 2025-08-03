@@ -1,12 +1,19 @@
-import { Outlet, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
-import NonAdminDashboard from "./NonAdminDashboard";
+import { Navigate } from "react-router-dom";
 import { validateUserSession, UserRole } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 
-export default function DashboardLayout() {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requireAdmin?: boolean;
+  fallbackPath?: string;
+}
+
+export default function ProtectedRoute({
+  children,
+  requireAdmin = false,
+  fallbackPath = "/login",
+}: ProtectedRouteProps) {
   const [user, setUser] = useState<UserRole | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,14 +24,9 @@ export default function DashboardLayout() {
       try {
         const { isValid, user, isAdmin } = await validateUserSession();
 
-        // Special case for "Tester one" - grant admin access
-        const isTesterOne =
-          user?.first_name === "Tester" && user?.last_name === "one";
-        const finalIsAdmin = isAdmin || isTesterOne;
-
         setIsValid(isValid);
         setUser(user);
-        setIsAdmin(finalIsAdmin);
+        setIsAdmin(isAdmin);
       } catch (error) {
         console.error("Error validating session:", error);
         setIsValid(false);
@@ -50,26 +52,15 @@ export default function DashboardLayout() {
     );
   }
 
-  // Redirect to login if not authenticated
+  // Redirect to fallback if not authenticated
   if (!isValid || !user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={fallbackPath} replace />;
   }
 
-  // Show non-admin dashboard for regular users
-  if (!isAdmin) {
-    return <NonAdminDashboard />;
+  // Check admin requirement
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/dashboard" replace />;
   }
 
-  // Show full admin dashboard
-  return (
-    <div className="flex h-screen bg-[#121218] flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }
