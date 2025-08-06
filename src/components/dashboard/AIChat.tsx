@@ -24,9 +24,12 @@ export default function AIChat() {
 
   const handleSendMessage = () => {
     if (!input.trim()) return;
-
+    
+    // Limit input length
+    const trimmedInput = input.trim().slice(0, 500);
+    
     // Add user message
-    setMessages([...messages, { text: input, isUser: true }]);
+    setMessages([...messages, { text: trimmedInput, isUser: true }]);
     setIsLoading(true);
 
     // Simulate AI response
@@ -133,9 +136,9 @@ export default function AIChat() {
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <Input
-                  placeholder="Ask a question about your business data..."
+                  placeholder="Ask a question (max 500 characters)..."
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e) => setInput(e.target.value.slice(0, 500))}
                   onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                   className="bg-[#2a2a3a] border-[#3a3a4a] text-white"
                 />

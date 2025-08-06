@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -67,4 +65,5 @@ export function DatePickerWithRange({
   );
 }
 
-export default DatePickerWithRange;
+// Export as default to fix sourcemap issues
+export { DatePickerWithRange as default };

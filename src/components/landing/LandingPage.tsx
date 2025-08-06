@@ -64,6 +64,7 @@ export default function LandingPage() {
       linkedin: "https://www.linkedin.com/in/jetherpantonainnovation/",
       summary:
         "Strategic technology leader specializing in PMO, AI integration, and cross-domain prototyping. Expert in blockchain research, emerging technologies, and managing complex technology initiatives that drive digital transformation and innovation.",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jether",
     },
     {
       name: "Sebastian Vissepo",
@@ -73,6 +74,7 @@ export default function LandingPage() {
       linkedin: "https://www.linkedin.com/in/sebavissepo/",
       summary:
         "Cybersecurity expert and deployment specialist with extensive experience in secure system architecture, cloud infrastructure, and enterprise-level security implementations.",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sebastian",
     },
     {
       name: "Johan Lingani",
@@ -82,6 +84,7 @@ export default function LandingPage() {
       linkedin: "https://www.linkedin.com/in/johan-lingani-5788a953/",
       summary:
         "Digital marketing strategist and web developer specializing in social media optimization, user experience design, and AI-powered content creation strategies.",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=johan",
     },
   ];
 
@@ -207,9 +210,13 @@ export default function LandingPage() {
         <div className="lg:w-1/2 flex justify-center">
           <div className="relative bg-[#2a2a3a] p-4 rounded-lg">
             <img
-              src="/dashboard-example.png"
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=60&fm=webp"
               alt="xEmergence Dashboard Preview"
               className="relative rounded-lg shadow-2xl border border-[#3a3a4a] w-full max-w-xl"
+              loading="lazy"
+              decoding="async"
+              width="600"
+              height="400"
             />
           </div>
         </div>
@@ -421,7 +428,6 @@ export default function LandingPage() {
                     key={index}
                     name={member.name}
                     role={member.role}
-                    avatar={member.avatar}
                     description={member.description}
                     linkedin={member.linkedin}
                     isSelected={selectedTeamMember === index}

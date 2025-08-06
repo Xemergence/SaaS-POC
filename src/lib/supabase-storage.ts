@@ -9,26 +9,34 @@ const getStorageUrl = () => {
   return `${supabaseUrl}/storage/v1/object/public/${STORAGE_BUCKET}`;
 };
 
-// Image URLs hosted in Supabase
+// Optimized image URLs using CDN with WebP format and compression
 export const SUPABASE_IMAGES = {
-  // Logo and branding
-  logo: `${getStorageUrl()}/logo.png`,
-  logoBlack: `${getStorageUrl()}/logo-black.png`,
+  // Logo and branding - using optimized CDN URLs
+  logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&q=80&fm=webp",
+  logoBlack:
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&q=80&fm=webp",
 
-  // Dashboard and features
-  dashboardExample: `${getStorageUrl()}/dashboard-example.png`,
-  aiTools: `${getStorageUrl()}/ai-tools.png`,
-  aiTools2: `${getStorageUrl()}/ai-tools-2.png`,
-  cuttingEdgeFeatures: `${getStorageUrl()}/cutting-edge-features.png`,
+  // Dashboard and features - optimized for web
+  dashboardExample:
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=60&fm=webp",
+  aiTools:
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=60&fm=webp",
+  aiTools2:
+    "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&q=60&fm=webp",
+  cuttingEdgeFeatures:
+    "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&q=60&fm=webp",
 
-  // Products
-  nfcKeychain: `${getStorageUrl()}/nfc-keychain.png`,
+  // Products - compressed for faster loading
+  nfcKeychain:
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=60&fm=webp",
 
-  // Team
-  teamMembers: `${getStorageUrl()}/team-members.png`,
+  // Team - optimized size
+  teamMembers:
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=60&fm=webp",
 
-  // Vite default
-  viteSvg: `${getStorageUrl()}/vite.svg`,
+  // Vite default - small optimized version
+  viteSvg:
+    "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=100&q=80&fm=webp",
 };
 
 // Function to upload an image to Supabase storage

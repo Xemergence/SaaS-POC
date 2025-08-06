@@ -45,7 +45,8 @@ const products: Product[] = [
       "Custom NFC keychains with your logo or design, perfect for business branding and promotions",
     price: 89.99,
     originalPrice: 119.99,
-    image: "/nfc-keychain.png",
+    image:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
     category: "3d-art",
     priceId: "price_3d_art_cover_basic",
     features: [
@@ -65,7 +66,7 @@ const products: Product[] = [
       "Upload your logo or design for custom 3D printing on various products including keychains, coasters, and QR code readers",
     price: 149.99,
     image:
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=60&fm=webp",
     category: "3d-art",
     priceId: "price_3d_sculpture_base",
     features: [
@@ -86,7 +87,7 @@ const products: Product[] = [
     price: 29.99,
     originalPrice: 39.99,
     image:
-      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&q=80",
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&q=60&fm=webp",
     category: "nfc",
     priceId: "price_nfc_social_card",
     features: [
@@ -106,7 +107,7 @@ const products: Product[] = [
       "Table stand with NFC technology for collecting customer reviews and feedback",
     price: 79.99,
     image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=60&fm=webp",
     category: "nfc",
     priceId: "price_nfc_review_stand",
     features: [
@@ -489,8 +490,10 @@ function ProductCard({
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="eager"
-          fetchPriority="high"
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="300"
         />
         <div className="absolute top-3 left-3 bg-[#7b68ee] text-white px-3 py-1 rounded-full text-xs font-medium">
           COMING SOON

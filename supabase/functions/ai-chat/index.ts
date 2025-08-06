@@ -115,17 +115,16 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Prepare messages for ChatGPT API
+    // Prepare messages for ChatGPT API with stricter limits
     const messages = [
       {
         role: "system",
-        content:
-          "You are a helpful AI assistant specializing in real estate, IoT (Internet of Things), social media, and AI cost optimization. Provide concise, accurate, and helpful responses to user questions in these domains. Keep responses under 150 words to control costs.",
+        content: "You are a helpful AI assistant. Provide concise responses under 50 words.",
       },
-      ...conversationHistory.slice(-6), // Limit context to last 6 messages for cost control
+      ...conversationHistory.slice(-3), // Reduced from 6 to 3 messages for context
       {
         role: "user",
-        content: message.trim(),
+        content: message.trim().slice(0, 500), // Limit input length to 500 characters
       },
     ];
 
@@ -155,7 +154,7 @@ Deno.serve(async (req) => {
     const requestPayload = {
       model: selectedModel,
       messages: messages,
-      max_completion_tokens: 100, // Reduced from 150 to further optimize costs
+      max_completion_tokens: 50, // Reduced from 100 to 50
       temperature: 0.7,
       n: 1,
     };

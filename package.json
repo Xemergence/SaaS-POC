@@ -9,7 +9,10 @@
     "build-no-errors": "tsc ; vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts"
+    "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
+    "check-size": "npm run build && node scripts/build-optimization.js",
+    "analyze-size": "node --input-type=module -e \"import { analyzeBuild } from './scripts/build-optimization.js'; analyzeBuild();\"",
+    "vercel-build": "npm run build && node scripts/pre-deploy.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
@@ -68,11 +71,12 @@
     "@vitejs/plugin-react-swc": "3.5.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "sharp": "^0.34.3",
     "tailwindcss": "3.4.1",
-    "tempo-devtools": "^2.0.109",
     "terser": "^5.43.1",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
-    "vite-bundle-analyzer": "^1.1.0"
+    "vite-bundle-analyzer": "^1.1.0",
+    "tempo-devtools": "^2.0.109"
   }
 }

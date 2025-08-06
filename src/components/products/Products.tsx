@@ -421,6 +421,10 @@ function ProductCard({
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="300"
         />
         {product.originalPrice && (
           <div className="absolute top-3 left-3 bg-[#ff7676] text-white px-2 py-1 rounded-full text-xs font-medium">

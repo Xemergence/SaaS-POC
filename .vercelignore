@@ -1,0 +1,103 @@
+# Development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production
+
+# Build artifacts
+node_modules
+.next
+.vscode
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+core
+
+# Large static assets (now served from CDN)
+public/*.png
+public/*.jpg
+public/*.jpeg
+public/*.gif
+public/*.webp
+public/ai-tools*.png
+public/dashboard-example.png
+public/team-members.png
+public/logo*.png
+public/nfc-keychain.png
+public/cutting-edge-features.png
+screenshot.png
+
+# Keep only essential public assets
+!public/vite.svg
+!public/favicon.ico
+
+# Development tools and storybooks
+.storybook
+src/stories/
+src/tempobook/
+scripts/
+temp/
+.tempo/
+
+# Documentation and non-essential files
+README.md
+SECURITY_AUDIT.md
+*.md
+
+# Config files not needed for deployment
+tempo.config.json
+.gitignore
+.eslintrc*
+.prettierrc*
+tsconfig.node.json
+components.json
+
+# Source maps and analysis
+*.map
+stats.html
+bundle-analyzer-report.html
+
+# Exclude source files - only deploy built assets
+src/
+
+# Package files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Vercel and deployment
+.vercel/
+.env*
+
+# Test files
+**/*.test.*
+**/*.spec.*
+__tests__/
+coverage/
+
+# TypeScript config files
+tsconfig.json
+tsconfig.*.json
+
+# Additional cleanup
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Exclude dev dependencies from deployment
+node_modules/@types/
+node_modules/@typescript-eslint/
+node_modules/eslint/
+node_modules/prettier/
+node_modules/vite/
+node_modules/@vitejs/
+node_modules/typescript/
+node_modules/autoprefixer/
+node_modules/postcss/
+node_modules/tailwindcss/
+node_modules/tempo-devtools/
+node_modules/terser/
+node_modules/vite-bundle-analyzer/
