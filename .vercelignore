@@ -1,11 +1,10 @@
-# Development files
+# Development environment files
 .env.local
 .env.development.local
 .env.test.local
-.env.production
+.env.production.local
 
-# Build artifacts
-node_modules
+# Build artifacts and caches
 .next
 .vscode
 *.log
@@ -13,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 core
+dist
 
 # Large static assets (now served from CDN)
 public/*.png
@@ -32,11 +32,10 @@ screenshot.png
 !public/vite.svg
 !public/favicon.ico
 
-# Development tools and storybooks
+# Development tools and storybooks (keep for build but exclude from final bundle)
 .storybook
 src/stories/
 src/tempobook/
-scripts/
 temp/
 .tempo/
 
@@ -47,38 +46,22 @@ SECURITY_AUDIT.md
 
 # Config files not needed for deployment
 tempo.config.json
-.gitignore
 .eslintrc*
 .prettierrc*
-tsconfig.node.json
-components.json
 
 # Source maps and analysis
 *.map
 stats.html
 bundle-analyzer-report.html
 
-# Exclude source files - only deploy built assets
-src/
-
-# Package files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
 # Vercel and deployment
 .vercel/
-.env*
 
 # Test files
 **/*.test.*
 **/*.spec.*
 __tests__/
 coverage/
-
-# TypeScript config files
-tsconfig.json
-tsconfig.*.json
 
 # Additional cleanup
 .DS_Store
@@ -87,17 +70,12 @@ Thumbs.db
 *.swo
 *~
 
-# Exclude dev dependencies from deployment
-node_modules/@types/
-node_modules/@typescript-eslint/
-node_modules/eslint/
-node_modules/prettier/
-node_modules/vite/
-node_modules/@vitejs/
-node_modules/typescript/
-node_modules/autoprefixer/
-node_modules/postcss/
-node_modules/tailwindcss/
-node_modules/tempo-devtools/
-node_modules/terser/
-node_modules/vite-bundle-analyzer/
+# Keep these files - they are ESSENTIAL for Vercel deployment:
+# - package.json (needed for dependencies)
+# - package-lock.json (needed for npm ci)
+# - tsconfig.json (needed for TypeScript compilation)
+# - src/ directory (needed for Vite build)
+# - vite.config.ts (needed for Vite build configuration)
+# - tailwind.config.js (needed for Tailwind CSS)
+# - postcss.config.js (needed for PostCSS)
+# - components.json (needed for shadcn/ui components)
