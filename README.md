@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# SaaS POC — Standardized Architecture (Vercel-ready)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This rewrite keeps your original pages, components, and styling, while standardizing the build for Vercel and Tempo.
 
-Currently, two official plugins are available:
+## Key Tech
+- Vite + React + TypeScript
+- TailwindCSS + shadcn/ui primitives
+- React Router 6
+- Supabase helpers (optional via env)
+- Tempo Devtools in **development only**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Commands
+- `npm run dev` — local dev
+- `npm run build` — production build to `dist/`
+- `npm run preview` — preview the build locally
 
-## Expanding the ESLint configuration
+## Environment
+Copy and fill `.env.example` to `.env`:
+- `VITE_SUPABASE_URL=`
+- `VITE_SUPABASE_ANON_KEY=`
+- `VITE_TEMPO=false`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Vercel
+We ship `vercel.json` with:
+- `"installCommand": "npm install"` (works even if no lockfile is present)
+- `"buildCommand": "npm run build"`
+- `"outputDirectory": "dist"`
+- SPA rewrite so deep links do not 404.
 
-- Configure the top-level `parserOptions` property like this:
+If you prefer `npm ci`, generate and commit a fresh `package-lock.json` locally once: `rm -rf node_modules package-lock.json && npm install` then commit the lockfile.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Tempo (beta)
+- Local: set `VITE_TEMPO=true` to enable devtools and dynamic routes in development.
